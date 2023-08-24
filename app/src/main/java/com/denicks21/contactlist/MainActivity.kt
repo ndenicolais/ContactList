@@ -17,9 +17,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -29,6 +32,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
@@ -40,18 +44,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.compose.rememberAsyncImagePainter
 import com.denicks21.contactlist.activities.EditContactActivity
-import com.denicks21.contactlist.activities.InfoActivity
 import com.denicks21.contactlist.composables.ActionItem
 import com.denicks21.contactlist.composables.ActionMenu
 import com.denicks21.contactlist.composables.CustomAlertDialog
@@ -254,6 +263,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TopBar() {
+        var showInfoDialog by remember { mutableStateOf(false) }
         TopAppBar(
             title = {
                 Text(
@@ -277,7 +287,7 @@ class MainActivity : ComponentActivity() {
                             icon = Icons.Filled.Info,
                             overflowMode = OverflowMode.NEVER_OVERFLOW
                         ) {
-                            navigateToInfoPage()
+                            showInfoDialog = true
                         }
                     ),
                     numIcons = 1
@@ -285,16 +295,126 @@ class MainActivity : ComponentActivity() {
             },
             backgroundColor = MaterialTheme.colors.primary
         )
+        if (showInfoDialog) {
+            val uriHandler = LocalUriHandler.current
+
+            Dialog(
+                onDismissRequest = { showInfoDialog = false }
+            ) {
+                Card(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .height(470.dp)
+                        .width(450.dp),
+                    shape = RoundedCornerShape(size = 8.dp),
+                    backgroundColor = MaterialTheme.colors.background
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        IconButton(
+                            onClick = { showInfoDialog = false },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Close dialog"
+                            )
+                        }
+                        Card(
+                            modifier = Modifier
+                                .height(400.dp)
+                                .width(450.dp)
+                                .padding(start = 15.dp, end = 15.dp, bottom = 15.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            backgroundColor = MaterialTheme.colors.onBackground,
+                            elevation = 10.dp
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.app_name),
+                                    color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                    fontSize = 30.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription = "Logo",
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .border(
+                                            width = 1.dp,
+                                            color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                            shape = CircleShape
+                                        )
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                Divider(
+                                    color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                    thickness = 2.dp
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text(
+                                    text = "Android application built with Kotlin and Jetpack Compose that shows " +
+                                            "how to perform CRUD operations in the Room database using Android Architecture Components " +
+                                            "and the MVVM Architecture Pattern.",
+                                    color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Divider(
+                                    color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                    thickness = 2.dp
+                                )
+                                Spacer(modifier = Modifier.height(15.dp))
+                                Text(
+                                    text = "My GitHub",
+                                    color = if (isSystemInDarkTheme()) LightText else DarkText,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 30.sp
+                                )
+                                Spacer(modifier = Modifier.height(5.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    IconButton(
+                                        onClick = { uriHandler.openUri("https://github.com/ndenicolais") },
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.github_logo),
+                                            contentDescription = "Open Github",
+                                            colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) LightText else DarkText)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 10.dp),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Developed by DeNicks21",
+                            color = if (isSystemInDarkTheme()) DarkText else LightText,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun navigateToContactPage(contacts: Contacts? = null) {
         val intent = Intent(this, EditContactActivity::class.java)
         intent.putExtra("contacts", contacts)
-        startActivity(intent)
-    }
-
-    private fun navigateToInfoPage() {
-        val intent = Intent(this, InfoActivity::class.java)
         startActivity(intent)
     }
 }
