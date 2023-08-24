@@ -32,24 +32,23 @@ Coil
 com.denicks21.contactlist       # ROOT PACKAGE
 │
 ├── activities                  # ACTIVITIES FOLDER
-|   ├── EditContactActivity     # Inject repository in the ScanLDS.
-|   ├── InfoActivity            # Inject repository in the ScanRepository.
-|   ├── IntroActivity           # Manages the device’s camera for scanning codes.
+|   ├── EditContactActivity     # Activity to add or edit a user.
+|   ├── IntroActivity           # Splashscreen of the app.
 |
 ├── composables                 # COMPOSABLES FOLDER
-|   ├── ActionItem              # .
-|   ├── CustomAlertDialog       # .
-|   ├── CustomTextField         # .
-|   ├── DatePicker              # .
-|   ├── ImagePicker             # .
+|   ├── ActionItem              # Topbar item.
+|   ├── CustomAlertDialog       # Custom alert dialog.
+|   ├── CustomTextField         # Custom TextField.
+|   ├── DatePicker              # Component that allow to select a date.
+|   ├── ImagePicker             # Component that allow to select an image.
 |
 ├── repositories                # REPOSITORIES FOLDER
-│   ├── ContactsRepository      # .
+│   ├── ContactsRepository      # Repository operations.
 |
 ├── roomdb                      # ROOM DB FOLDER
-│   ├── Contacts                # .
-│   ├── ContactsDao             # .
-│   ├── ContactsDatabase        # .
+│   ├── Contacts                # Contact model.
+│   ├── ContactsDao             # Contact DAO.
+│   ├── ContactsDatabase        # Contact Database.
 |
 ├── ui                          # UI FOLDER
 │   ├── theme                   # THEME FOLDER
@@ -59,11 +58,11 @@ com.denicks21.contactlist       # ROOT PACKAGE
 |   │   ├── Type                # Typography styles for the fonts used by the app.
 |
 ├── utils                       # UTILS FOLDER
-│   ├── Converters              # .
-│   ├── Validation              # .
+│   ├── Converters              # Class that convert date and time.
+│   ├── Validation              # Class that verify user information.
 |
 ├── viewmodels                  # VIEWMODELS FOLDER
-│   ├── ContactViewModel        # .
+│   ├── ContactViewModel        # Model that interact with repository class.
 |
 ├── MainActivity                # Main activity
 ```
